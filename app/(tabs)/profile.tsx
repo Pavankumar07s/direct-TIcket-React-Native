@@ -610,8 +610,8 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 24,
-    marginBottom: 24,
+    marginTop:5,
+    marginBottom:5,
   },
   statCard: {
     flex: 1,
@@ -637,6 +637,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 14,
+    textAlign: 'center',
     color: '#666666',
   },
   saveButton: {
@@ -652,14 +653,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   menuContainer: {
-    marginTop: 24,
+    marginTop: 10,
+    borderRadius: 12,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1A1A1A',
     padding: 16,
-    marginBottom: 1,
+    borderRadius: 12,
+    marginBottom: 5,
   },
   menuIconContainer: {
     width: 40,

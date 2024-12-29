@@ -358,10 +358,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 20,
+    paddingLeft: 20,
+    paddingBottom: 20,
+    paddingRight: 20,
   },
   header: {
-    marginTop: 40,
+    marginTop: 8,
     marginBottom: 30,
   },
   welcomeText: {

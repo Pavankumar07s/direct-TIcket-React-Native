@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   serviceCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "black",
+    backgroundColor: "#1A1A1A",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,

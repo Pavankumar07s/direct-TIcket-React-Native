@@ -1,9 +1,9 @@
-const BASE_URL = "";
+const BASE_URL = "http://localhost:3001/api/public/trains";
 
- const trainServices = {
+const trainServices = {
   searchTrain: async (params) => {
     try {
-      const response = await fetch(`${BASE_URL}/search-train`, {
+      const response = await fetch(`${BASE_URL}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(params),
@@ -17,7 +17,7 @@ const BASE_URL = "";
 
   getLiveStatus: async (trainNumber) => {
     try {
-      const response = await fetch(`${BASE_URL}/live-status/${trainNumber}`);
+      const response = await fetch(`${BASE_URL}/liveStatus/${trainNumber}`);
       return await response.json();
     } catch (error) {
       console.error("Live Status Error:", error);
@@ -74,5 +74,4 @@ const BASE_URL = "";
   },
 };
 
-
-export default trainServices
+export default trainServices;
