@@ -187,8 +187,9 @@ export default function HomeScreen() {
             <View style={styles.iconContainer}>
               <Ionicons name="location-outline" size={24} color="#FFFFFF" />
             </View>
+            
             <View style={styles.inputWrapper}>
-              <Text style={styles.label}>From</Text>
+              
               <TextInput
                 style={styles.input}
                 value={formData.from}
@@ -217,7 +218,6 @@ export default function HomeScreen() {
               <Ionicons name="location-outline" size={24} color="#FFFFFF" />
             </View>
             <View style={styles.inputWrapper}>
-              <Text style={styles.label}>To</Text>
               <TextInput
                 style={styles.input}
                 value={formData.to}
@@ -395,6 +395,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   iconContainer: {
+    flex:1,
+    flexDirection: 'row',
     width: 40,
     height: 40,
     backgroundColor: '#333333',
@@ -592,12 +594,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   modalButtonText: {
-    color: '#FFFFFF',
+    color: 'grey',
     fontSize: 16,
     fontWeight: '500',
   },
   modalButtonConfirmText: {
-    color: '#000000',
+    color: 'white',
   },
   errorText: {
     color: '#FF4444',
