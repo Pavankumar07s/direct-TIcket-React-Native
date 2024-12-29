@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/directtickets.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.pavankumar_07s.directTickets"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f62e8b9b-2156-4821-8da6-037ee7f1a817"
+      }
     }
   }
 }

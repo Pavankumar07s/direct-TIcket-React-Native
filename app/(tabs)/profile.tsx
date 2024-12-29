@@ -13,10 +13,10 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import { useNavigation } from '@react-navigation/native';
 
 export default function Profile() {
-  const navigation = useNavigation(); // Navigation hook
+  const navigation = useNavigation(); 
 
   const [userInfo, setUserInfo] = useState({
     name: 'John Doe',

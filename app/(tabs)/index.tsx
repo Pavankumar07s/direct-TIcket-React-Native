@@ -177,6 +177,11 @@ export default function HomeScreen() {
           <>
             {/* Train Image */}
             <View style={styles.imageContainer}>
+                <View style={styles.Heading}>
+                <Text style={styles.DirectTicketsHeading}>Welcome To</Text>
+                <Text style={styles.DirectTicketsName}>DirectTickets</Text>
+                </View>
+            
               <Image
                 source={require('../../assets/images/banner.png')} // Update the path to your PNG file
                 style={styles.trainImage}
@@ -336,13 +341,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f5f5f5",
   },
+  Heading: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start", 
+  },
+  DirectTicketsHeading: {
+    textAlign: "left",
+    fontWeight: "700",
+    fontSize: 30,
+  },
+  DirectTicketsName: {
+    textAlign: "left",
+    color: "blue",
+    fontSize: 24,
+    fontWeight: "800",
+  },
   trainImage: {
     width: "100%",
-    height: 100, 
+    height: 100,
   },
   imageContainer: {
     alignItems: "center",
-    marginVertical: 30,
+    justifyContent: "center",
+    paddingTop: 50,
   },
   formContainer: {
     paddingHorizontal: 20,
