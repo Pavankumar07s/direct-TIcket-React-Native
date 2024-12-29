@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Modal, Image } from "react-native";
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  TextInput, 
+  TouchableOpacity, 
+  ScrollView, 
+  Modal,
+  Animated,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ThemedText } from '@/components/ThemedText';
+
 export default function HomeScreen() {
-  // Form state
   interface FormData {
     from: string;
     fromStation: string;
@@ -53,16 +62,12 @@ export default function HomeScreen() {
     "Thiruvananthapuram Central": "TVC",
     "Visakhapatnam Junction": "VSKP"
   };
-  
 
-  
-  // Modal states
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [dateType, setDateType] = useState<null | 'departureDate' | 'returnDate'>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
 
-  // Handle form input changes
   const handleInputChange = (field: keyof FormData, value: string | Date) => {
     setFormData(prev => ({
       ...prev,
@@ -70,7 +75,6 @@ export default function HomeScreen() {
     }));
   };
 
-  // Handle location swap
   const handleSwap = () => {
     setFormData(prev => ({
       ...prev,
@@ -81,7 +85,6 @@ export default function HomeScreen() {
     }));
   };
 
-  // Handle date changes
   const handleDateChange = (event: any, selectedDate: Date | undefined) => {
     setShowDatePicker(false);
     if (selectedDate) {
@@ -89,211 +92,217 @@ export default function HomeScreen() {
     }
   };
 
-  // Handle search
   const handleSearch = () => {
-    // Convert station names to their short codes before sending
     const fromShort = stationShortNames[formData.fromStation] || formData.fromStation;
     const toShort = stationShortNames[formData.toStation] || formData.toStation;
   
     const newSearch = {
-      from: fromShort, 
-      to: toShort,     
+      from: fromShort,
+      to: toShort,
       date: formData.departureDate.toLocaleDateString()
     };
   
     setRecentSearches(prev => [newSearch, ...prev.slice(0, 4)]);
-    // yaha pe backend call karna hai
   };
-  
+
   const handleSuggestionSelect = (stationName: string, field: 'from' | 'to') => {
-    const shortName = stationShortNames[stationName] || stationName; // Fallback to full name if no short name found
+    const shortName = stationShortNames[stationName] || stationName;
     if (field === 'from') {
       handleInputChange('from', shortName);
-      handleInputChange('fromStation', stationName); // Display the full station name
+      handleInputChange('fromStation', stationName);
     } else if (field === 'to') {
       handleInputChange('to', shortName);
-      handleInputChange('toStation', stationName); // Display the full station name
+      handleInputChange('toStation', stationName);
     }
-    setShowSuggestions(false); 
+    setShowSuggestions(false);
   };
-  
 
   const renderSuggestions = (field: 'from' | 'to') => {
     const query = field === 'from' ? formData.from : formData.to;
-  
-    if (query.length > 0 && showSuggestions) { 
+    
+    if (query.length > 0 && showSuggestions) {
       const suggestions = [
-  "New Delhi Railway Station",
-  "Mumbai Central Railway Station",
-  "Howrah Junction",
-  "Chennai Central Railway Station",
-  "Sealdah Railway Station",
-  "Secunderabad Junction",
-  "Ernakulam Junction",
-  "Bandra Terminus",
-  "Lokmanya Tilak Terminus",
-  "Rajiv Gandhi International Airport",
-  "Ahmedabad Junction",
-  "Patna Junction",
-  "Kanpur Central",
-  "Lucknow Charbagh",
-  "Varanasi Junction",
-  "Kolkata Railway Station",
-  "Pune Junction",
-  "Bangalore City Railway Station",
-  "Madurai Junction",
-  "Coimbatore Junction",
-  "Jaipur Junction",
-  "Thiruvananthapuram Central",
-  "Visakhapatnam Junction",
-  "Dehradun Railway Station",
-  "Pune Railway Station",
-  "Kings Cross, London, UK"
-]
+        "New Delhi Railway Station",
+        "Mumbai Central Railway Station",
+        "Howrah Junction",
+        "Chennai Central Railway Station",
+        "Sealdah Railway Station",
+        "Secunderabad Junction",
+        "Ernakulam Junction",
+        "Bandra Terminus",
+        "Lokmanya Tilak Terminus",
+        "Rajiv Gandhi International Airport",
+        "Ahmedabad Junction",
+        "Patna Junction",
+        "Kanpur Central",
+        "Lucknow Charbagh",
+        "Varanasi Junction",
+        "Kolkata Railway Station",
+        "Pune Junction",
+        "Bangalore City Railway Station",
+        "Madurai Junction",
+        "Coimbatore Junction",
+        "Jaipur Junction",
+        "Thiruvananthapuram Central",
+        "Visakhapatnam Junction"
+      ];
+
+      const filteredSuggestions = suggestions.filter(station => 
+        station.toLowerCase().includes(query.toLowerCase())
+      );
 
       return (
         <View style={styles.suggestionsContainer}>
-          {suggestions
-            .filter(station => station.toLowerCase().includes(query.toLowerCase())) 
-            .map((station, index) => (
+          <ScrollView nestedScrollEnabled={true} style={{ maxHeight: 200 }}>
+            {filteredSuggestions.map((station, index) => (
               <TouchableOpacity 
-                key={index} 
-                onPress={() => handleSuggestionSelect(station, field)}
+                key={index}
                 style={styles.suggestionItem}
+                onPress={() => handleSuggestionSelect(station, field)}
               >
+                <Ionicons name="train-outline" size={20} color="#666666" style={styles.suggestionIcon} />
                 <Text style={styles.suggestionText}>{station}</Text>
               </TouchableOpacity>
             ))}
+          </ScrollView>
         </View>
       );
     }
     return null;
   };
-  
-  
 
   const renderContent = () => {
-        return (
-          <>
-            {/* Train Image */}
-            <View style={styles.imageContainer}>
-                <View style={styles.Heading}>
-                <Text style={styles.DirectTicketsHeading}>Welcome To</Text>
-                <Text style={styles.DirectTicketsName}>DirectTickets</Text>
-                </View>
-            
-              <Image
-                source={require('../../assets/images/banner.png')} // Update the path to your PNG file
-                style={styles.trainImage}
-                resizeMode="contain"
+    return (
+      <View style={styles.contentContainer}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.welcomeText}>Welcome to</Text>
+          <Text style={styles.appNameText}>DirectTickets</Text>
+        </View>
+
+        {/* Search Form */}
+        <View style={styles.formContainer}>
+          {/* From Field */}
+          <View style={styles.inputContainer}>
+            <View style={styles.iconContainer}>
+              <Ionicons name="location-outline" size={24} color="#FFFFFF" />
+            </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>From</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.from}
+                onChangeText={(text) => {
+                  handleInputChange('from', text);
+                  setShowSuggestions(true);
+                }}
+                placeholder="Enter departure station"
+                placeholderTextColor="#666666"
               />
+              {formData.fromStation && (
+                <Text style={styles.stationName}>{formData.fromStation}</Text>
+              )}
             </View>
-
-            {/* Travel Form */}
-            <View style={styles.formContainer}>
-              {/* From Field */}
-              <View style={styles.inputRow}>
-                <Ionicons name="location-outline" size={24} color="#000" />
-                <View style={styles.inputSection}>
-                  <Text style={styles.label}>From</Text>
-                  <TextInput
-                      style={styles.input}
-                      value={formData.from}
-                      onChangeText={(text) => {
-                        handleInputChange('from', text);
-                        setShowSuggestions(true);  // Show suggestions when typing
-                      }}
-                      placeholder="From"
-                      placeholderTextColor="#333"
-                    />
-                  <Text style={styles.subLabel}>{formData.fromStation}</Text>
-                </View>
-                {renderSuggestions('from')}
-              </View>
-              
-
-              {/* Swap Button */}
-              <TouchableOpacity style={styles.swapButton} onPress={handleSwap}>
-                <Ionicons name="swap-vertical-outline" size={24} color="#007AFF" />
-              </TouchableOpacity>
-
-              {/* To Field */}
-              <View style={styles.inputRow}>
-                <Ionicons name="location-outline" size={24} color="#000" />
-                <View style={styles.inputSection}>
-                  <Text style={styles.label}>To</Text>
-                  <TextInput
-                      style={styles.input}
-                      value={formData.to}
-                      onChangeText={(text) => {
-                        handleInputChange('to', text);
-                        setShowSuggestions(true); 
-                      }}
-                      placeholder="To"
-                      placeholderTextColor="#333"
-                    />
-                    <Text style={styles.subLabel}>{formData.toStation}</Text>
-                </View>
-              {renderSuggestions('to')}
-              </View>
-              
-              
-
-              {/* Date Fields */}
-              <View style={styles.dateContainer}>
-                <TouchableOpacity 
-                  style={styles.dateInput}
-                  onPress={() => {
-                    setDateType('departureDate');
-                    setShowDatePicker(true);
-                  }}
-                >
-                  <Text style={styles.label}>Departure</Text>
-                  <Text style={styles.input}>
-                    {formData.departureDate.toLocaleDateString()}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Search Button */}
-              <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-                <Text style={styles.searchButtonText}>Search</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Recent Searches */}
-            <View style={styles.recentSearchContainer}>
-                <ThemedText style={styles.searchResult}type="title">Search Results</ThemedText>
-
-            {/* Check if there are recent searches */}
-            {recentSearches.length === 0 ? (
-              // Display message and icon if no results
-              <View style={styles.noResultsContainer}>
-                <Ionicons name="search-outline" size={50} color="#ccc" />
-                <Text style={styles.noResultsText}>No search results</Text>
-              </View>
-            ) : (
-              // Display recent searches if there are any
-              recentSearches.map((search, index) => (
-                <View key={index} style={styles.recentSearch}>
-                  <Ionicons name="time-outline" size={24} color="#000" />
-                  <View style={styles.recentSearchTextContainer}>
-                    <Text style={styles.recentSearchText}>
-                      {search.from} → {search.to}
-                    </Text>
-                    <Text style={styles.recentSearchDate}>{search.date}</Text>
-                  </View>
-                </View>
-              ))
-            )}
+            {renderSuggestions('from')}
           </View>
-          </>
-        );  
+
+          {/* Swap Button */}
+          <TouchableOpacity style={styles.swapButton} onPress={handleSwap}>
+            <Ionicons name="swap-vertical" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+
+          {/* To Field */}
+          <View style={styles.inputContainer}>
+            <View style={styles.iconContainer}>
+              <Ionicons name="location-outline" size={24} color="#FFFFFF" />
+            </View>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.label}>To</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.to}
+                onChangeText={(text) => {
+                  handleInputChange('to', text);
+                  setShowSuggestions(true);
+                }}
+                placeholder="Enter destination station"
+                placeholderTextColor="#666666"
+              />
+              {formData.toStation && (
+                <Text style={styles.stationName}>{formData.toStation}</Text>
+              )}
+            </View>
+            {renderSuggestions('to')}
+          </View>
+
+          {/* Date Selection */}
+          <TouchableOpacity 
+            style={styles.dateContainer}
+            onPress={() => {
+              setDateType('departureDate');
+              setShowDatePicker(true);
+            }}
+          >
+            <View style={styles.iconContainer}>
+              <Ionicons name="calendar-outline" size={24} color="#FFFFFF" />
+            </View>
+            <View style={styles.dateWrapper}>
+              <Text style={styles.label}>Travel Date</Text>
+              <Text style={styles.dateText}>
+                {formData.departureDate.toLocaleDateString()}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Search Button */}
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+            <Text style={styles.searchButtonText}>Search Trains</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Recent Searches */}
+        <View style={styles.recentSearchesContainer}>
+          <Text style={styles.recentSearchesTitle}>Recent Searches</Text>
+          
+          {recentSearches.length === 0 ? (
+            <View style={styles.noSearchesContainer}>
+              <Ionicons name="search-outline" size={48} color="#666666" />
+              <Text style={styles.noSearchesText}>No recent searches</Text>
+            </View>
+          ) : (
+            recentSearches.map((search, index) => (
+              <TouchableOpacity 
+                key={index} 
+                style={styles.recentSearchItem}
+                onPress={() => {
+                  handleInputChange('from', search.from);
+                  handleInputChange('to', search.to);
+                }}
+              >
+                <View style={styles.recentSearchIcon}>
+                  <Ionicons name="time-outline" size={24} color="#FFFFFF" />
+                </View>
+                <View style={styles.recentSearchInfo}>
+                  <Text style={styles.recentSearchRoute}>
+                    {search.from} → {search.to}
+                  </Text>
+                  <Text style={styles.recentSearchDate}>{search.date}</Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          )}
+        </View>
+      </View>
+    );
   };
+
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <StatusBar style="auto" />
+      <StatusBar style="light" />
+      <ScrollView 
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {renderContent()}
       </ScrollView>
 
@@ -305,27 +314,32 @@ export default function HomeScreen() {
           visible={showDatePicker}
           onRequestClose={() => setShowDatePicker(false)}
         >
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <View style={{ width: "90%", backgroundColor: "#fff", borderRadius: 10, padding: 20 }}>
-              <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Select {dateType === 'departureDate' ? 'Departure' : 'Return'} Date</Text>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Select Date</Text>
               <DateTimePicker
                 value={formData[dateType!]}
                 mode="date"
                 display="inline"
                 onChange={handleDateChange}
+                minimumDate={new Date()}
+                textColor="#FFFFFF"
               />
-              <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
-                <TouchableOpacity onPress={() => setShowDatePicker(false)} style={{ padding: 10 }}>
-                  <Text style={{ color: "#007AFF" }}>Cancel</Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity 
+                  style={styles.modalButton} 
+                  onPress={() => setShowDatePicker(false)}
+                >
+                  <Text style={styles.modalButtonText}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonConfirm]}
                   onPress={() => {
                     setShowDatePicker(false);
                     handleDateChange(null, formData[dateType!]);
                   }}
-                  style={{ padding: 10 }}
                 >
-                  <Text style={{ color: "#007AFF", fontWeight: "bold" }}>Confirm</Text>
+                  <Text style={styles.modalButtonText}>Confirm</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -335,200 +349,282 @@ export default function HomeScreen() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: '#000000',
   },
-  Heading: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start", 
+  scrollView: {
+    flex: 1,
   },
-  DirectTicketsHeading: {
-    textAlign: "left",
-    fontWeight: "700",
-    fontSize: 30,
+  contentContainer: {
+    padding: 20,
   },
-  DirectTicketsName: {
-    textAlign: "left",
-    color: "blue",
+  header: {
+    marginTop: 40,
+    marginBottom: 30,
+  },
+  welcomeText: {
     fontSize: 24,
-    fontWeight: "800",
+    color: '#FFFFFF',
+    fontWeight: '400',
   },
-  trainImage: {
-    width: "100%",
-    height: 100,
-  },
-  imageContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 50,
+  appNameText: {
+    fontSize: 32,
+    color: '#FFFFFF',
+    fontWeight: '700',
   },
   formContainer: {
-    paddingHorizontal: 20,
-    backgroundColor: "#fff",
-    paddingVertical: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  inputRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    backgroundColor: '#1A1A1A',
+    borderRadius: 15,
+    padding: 20,
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
   },
-  inputSection: {
+  inputContainer: {
+    marginBottom: 20,
+    position: 'relative',
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#333333',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  inputWrapper: {
     flex: 1,
-    paddingLeft: 10,
   },
   label: {
+    color: '#666666',
     fontSize: 14,
-    color: "#666",
     marginBottom: 5,
+    fontWeight: '500',
   },
   input: {
+    color: '#FFFFFF',
     fontSize: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    paddingVertical: 5,
-    color: "#333",
+    borderBottomColor: '#333333',
+    paddingVertical: 8,
+    fontWeight: '400',
   },
-  subLabel: {
+  stationName: {
+    color: '#666666',
     fontSize: 12,
-    color: "#888",
-    marginTop: 5,
+    marginTop: 4,
+    fontStyle: 'italic',
   },
   swapButton: {
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: 'center',
+    width: 40,
+    height: 40,
+    backgroundColor: '#333333',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: 10,
-    padding: 10,
-    backgroundColor: "#f0f8ff",
-    borderRadius: 50,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   dateContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
+    marginBottom: 20,
   },
-  dateInput: {
+  dateWrapper: {
     flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    backgroundColor: "#fff",
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+  },
+  dateText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333333',
   },
   searchButton: {
-    backgroundColor: "#007AFF",
-    paddingVertical: 12,
-    marginTop: 20,
+    backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
+    padding: 16,
+    alignItems: 'center',
+    marginTop: 20,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
     elevation: 5,
   },
   searchButtonText: {
-    color: "#fff",
+    color: '#000000',
     fontSize: 16,
-    fontWeight: "bold",
-  },
-  recentSearchContainer: {
-    backgroundColor: "#fff",
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  recentSearch: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-  recentSearchTextContainer: {
-    marginLeft: 10,
-  },
-  recentSearchText: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  recentSearchDate: {
-    fontSize: 12,
-    color: "#888",
+    fontWeight: '600',
   },
   suggestionsContainer: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 10,
+    marginTop: 5,
+    borderWidth: 1,
+    borderColor: '#333333',
     position: 'absolute',
-    top: 60,  // Adjust according to the position of your input field
-    left: 20,
-    right: 20,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 5,
-    maxHeight: 200,  // Limit the height of suggestions
-    overflow: 'scroll',
-    zIndex: 10,
+    top: '100%',
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    maxHeight: 200,
   },
-  
   suggestionItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    justifyContent: 'center',
+    borderBottomColor: '#333333',
   },
-  
+  suggestionIcon: {
+    marginRight: 10,
+  },
   suggestionText: {
-    fontSize: 16,
-    color: '#333',
+    color: '#FFFFFF',
+    fontSize: 14,
+    flex: 1,
   },
-
-  suggestionItemHovered: {
-    backgroundColor: '#f0f0f0',  
+  recentSearchesContainer: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 15,
+    padding: 20,
+    marginTop: 20,
   },
-  noResultsContainer: {
+  recentSearchesTitle: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 15,
+  },
+  noSearchesContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 40,
+    paddingVertical: 30,
   },
-  noResultsText: {
+  noSearchesText: {
+    color: '#666666',
     fontSize: 16,
-    color: '#ccc',
     marginTop: 10,
   },
-  searchResult:{
+  recentSearchItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333333',
+  },
+  recentSearchIcon: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#333333',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  recentSearchInfo: {
+    flex: 1,
+  },
+  recentSearchRoute: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 4,
+  },
+  recentSearchDate: {
+    color: '#666666',
+    fontSize: 12,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#1A1A1A',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    minHeight: '50%',
+  },
+  modalTitle: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  modalButton: {
+    flex: 1,
+    backgroundColor: '#333333',
+    padding: 15,
+    borderRadius: 10,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  modalButtonConfirm: {
+    backgroundColor: '#FFFFFF',
+  },
+  modalButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  modalButtonConfirmText: {
+    color: '#000000',
+  },
+  errorText: {
+    color: '#FF4444',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  inputFocused: {
+    borderBottomColor: '#FFFFFF',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  suggestionItemHovered: {
+    backgroundColor: '#333333',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  searchResult: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#000",
+    color: "#FFFFFF",
     marginBottom: 10,
     textAlign: "center",
   }

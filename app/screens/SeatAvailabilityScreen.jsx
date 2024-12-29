@@ -61,6 +61,7 @@ export default function SeatAvailabilityScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <Text style={styles.title}>Check Seat Availability</Text>
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
@@ -68,30 +69,35 @@ export default function SeatAvailabilityScreen() {
           value={trainNumber}
           onChangeText={setTrainNumber}
           keyboardType="numeric"
+          placeholderTextColor="#B0B0B0"
           maxLength={5}
         />
         <TextInput
           style={styles.input}
           placeholder="From Station"
           value={fromStation}
+          placeholderTextColor="#B0B0B0"
           onChangeText={setFromStation}
         />
         <TextInput
           style={styles.input}
           placeholder="To Station"
           value={toStation}
+          placeholderTextColor="#B0B0B0"
           onChangeText={setToStation}
         />
         <TextInput
           style={styles.input}
           placeholder="Date (DD/MM/YYYY)"
           value={date}
+          placeholderTextColor="#B0B0B0"
           onChangeText={setDate}
         />
         <TextInput
           style={styles.input}
           placeholder="Quota (GEN/TATKAL/LADIES)"
           value={quota}
+          placeholderTextColor="#B0B0B0"
           onChangeText={setQuota}
         />
         <TouchableOpacity
@@ -136,12 +142,18 @@ export default function SeatAvailabilityScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F4F6F9",
-    padding: 20,
+    backgroundColor: "black",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+    color: "white",
   },
   formContainer: {
     marginBottom: 20,
-    backgroundColor: "#FFF",
+    backgroundColor: "black",
     borderRadius: 12,
     padding: 16,
     shadowColor: "#000",
@@ -153,23 +165,26 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     fontSize: 16,
-    color: "#333",
+    color: "white",
     borderRadius: 8,
     paddingLeft: 16,
     marginBottom: 12,
-    backgroundColor: "#F1F1F1",
+    backgroundColor: "black",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "grey",
   },
   checkButton: {
     paddingVertical: 12,
     paddingHorizontal: 24,
-    backgroundColor: "#2196F3",
+    backgroundColor: "grey",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 12,
   },
   buttonText: {
-    color: "#FFF",
+    color: "white",
     fontSize: 16,
     fontWeight: "600",
   },

@@ -47,7 +47,6 @@ export default function TabLayout() {
         tabBarIcon: ({ color }) => <Icon name="person-outline" size={28} color={color} />,
   }}
 />
-
     </Tabs>
   );
 }

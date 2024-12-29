@@ -39,6 +39,7 @@ export default function PNRStatusScreen() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Check PNR Status</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -111,14 +112,21 @@ export default function PNRStatusScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F4F6F9",
+    backgroundColor: "black",
     padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+    color: "white", 
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
-    backgroundColor: "#FFF",
+    backgroundColor: "black",
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
@@ -132,16 +140,19 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     fontSize: 16,
-    color: "#333",
+    color: "gray",
     borderRadius: 8,
     paddingLeft: 16,
-    backgroundColor: "#F1F1F1",
+    backgroundColor: "black",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "grey",
   },
   checkButton: {
     marginLeft: 12,
     paddingVertical: 12,
     paddingHorizontal: 24,
-    backgroundColor: "#2196F3",
+    backgroundColor: "gray",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
@@ -150,7 +161,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#B0B0B0",
   },
   buttonText: {
-    color: "#FFF",
+    color: "white",
     fontSize: 16,
     fontWeight: "600",
   },

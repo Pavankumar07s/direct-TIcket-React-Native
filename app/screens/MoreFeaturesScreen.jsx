@@ -14,42 +14,42 @@ import { Ionicons } from "@expo/vector-icons";
 const services = [
   {
     id: "search",
-    title: "SearchTrainService",
+    title: "Search Train",
     icon: "train-outline",
     screen: "SearchTrain",
     description: "Search for trains between stations",
   },
   {
     id: "live",
-    title: "GetTrainLiveStatusService",
+    title: "Train Live Status",
     icon: "location-outline",
     screen: "LiveStatus",
     description: "Check real-time train location",
   },
   {
     id: "schedule",
-    title: "GetTrainScheduleService",
+    title: "Train Schedule",
     icon: "time-outline",
     screen: "Schedule",
     description: "View complete train schedule",
   },
   {
     id: "pnr",
-    title: "GetPNRStatusService",
+    title: "PNR Status",
     icon: "document-text-outline",
     screen: "PNRStatus",
     description: "Check PNR status and booking details",
   },
   {
     id: "seat",
-    title: "CheckSeatAvailabilityService",
+    title: "Seat Availability",
     icon: "people-outline",
     screen: "SeatAvailability",
     description: "Check seat availability status",
   },
   {
     id: "fare",
-    title: "GetFareService",
+    title: "Get Fare",
     icon: "cash-outline",
     screen: "Fare",
     description: "Calculate fare for your journey",
@@ -61,13 +61,6 @@ export default function MoreFeaturesScreen() {
 
   return (
     <>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../../assets/images/banner.png")}
-          style={styles.trainImage}
-          resizeMode="contain"
-        />
-      </View>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Train Services</ThemedText>
       </ThemedView>
@@ -79,7 +72,7 @@ export default function MoreFeaturesScreen() {
             onPress={() => navigation.navigate(service.screen)}
           >
             <View style={styles.iconContainer}>
-              <Ionicons name={service.icon} size={24} color="#2196F3" />
+              <Ionicons name={service.icon} size={24} color="white" />
             </View>
             <View style={styles.serviceInfo}>
               <ThemedText style={styles.serviceTitle}>
@@ -98,21 +91,12 @@ export default function MoreFeaturesScreen() {
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    width: "100%",
-    height: 250, // Adjust the height as needed
-    overflow: "hidden", // Ensure the image doesn't overflow
-  },
-  trainImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain", // Ensures the image is scaled to fit
-  },
   titleContainer: {
     flexDirection: "row",
     gap: 8,
     marginBottom: 20,
     justifyContent: "center",
+    backgroundColor: "black",
   },
   servicesContainer: {
     padding: 16,
@@ -121,7 +105,7 @@ const styles = StyleSheet.create({
   serviceCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "black",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -133,15 +117,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+    borderWidth: 1, 
+    borderColor: 'grey', 
+    borderStyle: 'solid', 
   },
   iconContainer: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "rgba(33, 150, 243, 0.1)",
+    backgroundColor: "#333333",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 16,
+
   },
   serviceInfo: {
     flex: 1,

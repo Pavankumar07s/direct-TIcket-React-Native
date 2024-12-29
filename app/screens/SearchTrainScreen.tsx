@@ -39,7 +39,7 @@ const CustomInput = ({
   <View style={styles.inputContainer}>
     <Text style={styles.inputLabel}>{label}</Text>
     <View style={[styles.inputWrapper, error && styles.inputError]}>
-      <Ionicons name={icon} size={20} color="#666" style={styles.inputIcon} />
+      <Ionicons name={icon} size={20} color="grey" style={styles.inputIcon} />
       <TextInput
         style={styles.input}
         placeholder={placeholder}
@@ -110,13 +110,15 @@ export default function SearchTrainScreen() {
   return (
     <FlatList
       ListHeaderComponent={
+        
         <View style={styles.formContainer}>
+          <Text style={styles.title}>Search Trains</Text>
           <CustomInput
             label="From Station"
             value={fromStation}
             onChangeText={setFromStation}
-            placeholder="Enter source station"
             icon="location-outline"
+            placeholderTextColor="#B0B0B0"
             error={errors.fromStation}
             suggestions={stationSuggestions.filter((station) =>
               station.toLowerCase().includes(fromStation.toLowerCase())
@@ -127,8 +129,9 @@ export default function SearchTrainScreen() {
             label="To Station"
             value={toStation}
             onChangeText={setToStation}
-            placeholder="Enter destination station"
             icon="location-outline"
+            placeholder={toStation}
+            placeholderTextColor="#B0B0B0"
             error={errors.toStation}
             suggestions={stationSuggestions.filter((station) =>
               station.toLowerCase().includes(toStation.toLowerCase())
@@ -139,7 +142,7 @@ export default function SearchTrainScreen() {
             style={styles.datePickerButton}
             onPress={() => setShowDatePicker(true)}
           >
-            <Ionicons name="calendar-outline" size={20} color="#666" />
+            <Ionicons name="calendar-outline" size={20} color="grey" />
             <Text style={styles.datePickerText}>{date.toDateString()}</Text>
           </TouchableOpacity>
           {showDatePicker && (
@@ -172,11 +175,18 @@ export default function SearchTrainScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: 'black',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+    color: "white", 
   },
   formContainer: {
     padding: 16,
-    color : '#666',
+    color : 'grey',
   },
   inputContainer: {
     marginBottom: 16,
@@ -184,13 +194,13 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 14,
     marginBottom: 8,
-    color: '#666',
+    color: 'white',
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: 'grey',
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 48,
@@ -204,7 +214,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color : '#666',
+    color : 'grey',
   },
   errorText: {
     color: '#FF3B30',
@@ -224,25 +234,25 @@ const styles = StyleSheet.create({
   datePickerText: {
     marginLeft: 8,
     fontSize: 16,
-    color: '#666',
+    color: 'grey',
   },
   searchButton: {
     marginTop: 16,
-    backgroundColor: '#2196F3',
+    backgroundColor: 'grey',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   searchButtonText: {
-    color: '#FFF',
+    color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },
   suggestionsContainer: {
     maxHeight: 150,
-    backgroundColor: '#FFF',
+    backgroundColor: 'black',
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: 'grey',
     borderRadius: 8,
     marginTop: 8,
   },
@@ -251,5 +261,6 @@ const styles = StyleSheet.create({
   },
   suggestionText: {
     fontSize: 16,
+    color: 'white',
   },
 });
