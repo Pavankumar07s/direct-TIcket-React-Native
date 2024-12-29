@@ -67,6 +67,8 @@ export default function HomeScreen() {
   const [dateType, setDateType] = useState<null | 'departureDate' | 'returnDate'>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+
 
   const handleInputChange = (field: keyof FormData, value: string | Date) => {
     setFormData(prev => ({
@@ -92,7 +94,7 @@ export default function HomeScreen() {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async() => {
     const fromShort = stationShortNames[formData.fromStation] || formData.fromStation;
     const toShort = stationShortNames[formData.toStation] || formData.toStation;
   
@@ -101,8 +103,28 @@ export default function HomeScreen() {
       to: toShort,
       date: formData.departureDate.toLocaleDateString()
     };
+    console.log(newSearch);
   
     setRecentSearches(prev => [newSearch, ...prev.slice(0, 4)]);
+    try {
+      // Make the POST request to the backend
+      const response = await fetch("https:", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newSearch),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Search Results:", data);
+        setSearchResults(data);
+      } else {
+        console.error("Failed to fetch search results:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error making the request:", error);
+    }
   };
 
   const handleSuggestionSelect = (stationName: string, field: 'from' | 'to') => {
@@ -403,7 +425,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   inputWrapper: {
     flex: 1,
