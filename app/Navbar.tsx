@@ -276,7 +276,7 @@ const Navbar = () => {
       </View>
 
       {/* Sliding Drawer */}
-      <Animated.View
+      {/* <Animated.View
         style={[
           styles.drawer,
           { transform: [{ translateX: slideAnim }] },
@@ -300,7 +300,57 @@ const Navbar = () => {
         >
           <Text style={styles.drawerText}>Hotel</Text>
         </TouchableOpacity>
-      </Animated.View>
+      </Animated.View> */}
+      <Animated.View
+  style={[
+    styles.drawer,
+    { transform: [{ translateX: slideAnim }] },
+  ]}
+>
+  <View style={styles.drawerHeader}>
+    <Text style={styles.drawerHeaderText}>Menu</Text>
+    <TouchableOpacity onPress={toggleDrawer}>
+      <Image
+        source={require('../assets/images/close.png')} 
+        style={styles.closeIcon}
+      />
+    </TouchableOpacity>
+  </View>
+
+  <TouchableOpacity
+    style={styles.drawerOption}
+    onPress={() => navigateTo('airplane')}
+  >
+    <Image
+      source={require('../assets/images/flight.png')} 
+      style={styles.drawerIcon}
+    />
+    <Text style={styles.drawerText}>Airplane</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.drawerOption}
+    onPress={() => navigateTo('buses')}
+  >
+    <Image
+      source={require('../assets/images/bus.png')} 
+      style={styles.drawerIcon}
+    />
+    <Text style={styles.drawerText}>Buses</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.drawerOption}
+    onPress={() => navigateTo('hotel')}
+  >
+    <Image
+      source={require('../assets/images/hotel.png')} // Replace with hotel icon
+      style={styles.drawerIcon}
+    />
+    <Text style={styles.drawerText}>Hotel</Text>
+  </TouchableOpacity>
+</Animated.View>
+
 
       {/* Backdrop */}
       {isDrawerOpen && (
@@ -341,12 +391,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
     padding: 20,
     zIndex: 1000,
+    shadowColor: '#000',
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 10,
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
+  },
+  drawerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  drawerHeaderText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  closeIcon: {
+    width: 24,
+    height: 24,
+    tintColor: '#fff',
   },
   drawerOption: {
-    marginBottom: 20,
-    paddingVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#555',
+    borderBottomColor: '#333',
+    marginBottom: 10,
+  },
+  drawerIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 15,
+    tintColor: '#fff',
   },
   drawerText: {
     fontSize: 18,
