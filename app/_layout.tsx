@@ -40,10 +40,10 @@ export default function RootLayout() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       {/* Add Navbar at the top */}
-      <Navbar onMenuPress={handleMenuPress} onProfilePress={handleProfilePress} />
+      <Navbar />
 
       {/* Main navigation stack */}
       <Stack>
