@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { trainServices } from "../services/api";
+import trainServices  from "../services/api";
 
 export default function PNRStatusScreen() {
   const [pnrNumber, setPNRNumber] = useState("");

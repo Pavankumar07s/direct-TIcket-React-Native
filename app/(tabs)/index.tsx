@@ -13,6 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ThemedText } from '@/components/ThemedText';
+import axios from 'axios';
 
 export default function HomeScreen() {
   interface FormData {
@@ -94,36 +95,73 @@ export default function HomeScreen() {
     }
   };
 
-  const handleSearch = async() => {
+  // const handleSearch = async() => {
+  //   const fromShort = stationShortNames[formData.fromStation] || formData.fromStation;
+  //   const toShort = stationShortNames[formData.toStation] || formData.toStation;
+  
+  //   const newSearch = {
+  //     from: fromShort,
+  //     to: toShort,
+  //     date: formData.departureDate.toLocaleDateString()
+  //   };
+  //   console.log(newSearch);
+  
+  //   setRecentSearches(prev => [newSearch, ...prev.slice(0, 4)]);
+  //   try {
+  //     // Make the POST request to the backend
+  //     const response = await fetch("http://localhost:8080/api/public/train-search", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(newSearch),
+  //     });
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       console.log("Search Results:", data);
+  //       setSearchResults(data);
+  //     } else {
+  //       console.error("Failed to fetch search results:", response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error making the request:", error);
+  //   }
+  // };
+  const handleSearch = async () => {
     const fromShort = stationShortNames[formData.fromStation] || formData.fromStation;
     const toShort = stationShortNames[formData.toStation] || formData.toStation;
   
     const newSearch = {
-      from: fromShort,
-      to: toShort,
-      date: formData.departureDate.toLocaleDateString()
-    };
+      From: fromShort,
+      To: toShort,
+      Date: formData.departureDate.toISOString().split('T')[0], // Formats to "YYYY-MM-DD"
+  };
+  
+  
     console.log(newSearch);
   
-    setRecentSearches(prev => [newSearch, ...prev.slice(0, 4)]);
+    setRecentSearches((prev) => [newSearch, ...prev.slice(0, 4)]);
+  
     try {
-      // Make the POST request to the backend
-      const response = await fetch("https:", {
-        method: "POST",
+      // Make the POST request to the backend using Axios
+      const response = await axios.post("http://192.168.238.92:8080/api/public/train-search", newSearch, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newSearch),
       });
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Search Results:", data);
-        setSearchResults(data);
-      } else {
-        console.error("Failed to fetch search results:", response.statusText);
-      }
+  
+      console.log("Search Results:", response.data);
+      setSearchResults(response.data);
     } catch (error) {
-      console.error("Error making the request:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.error("Failed to fetch search results:", error.response.statusText);
+        } else {
+          console.error("Error making the request:", error.message);
+        }
+      } else {
+        console.error("Unexpected error:", error);
+      }
     }
   };
 

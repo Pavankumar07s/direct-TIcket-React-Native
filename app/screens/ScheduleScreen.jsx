@@ -9,8 +9,99 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
-import { trainServices } from "../services/api";
+import  trainServices  from "../services/api";
 
+// export default function ScheduleScreen() {
+//   const [trainNumber, setTrainNumber] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [schedule, setSchedule] = useState(null);
+
+//   const validateInput = () => {
+//     if (!trainNumber || trainNumber.length < 5) {
+//       Alert.alert("Invalid Input", "Please enter a valid train number");
+//       return false;
+//     }
+//     return true;
+//   };
+
+//   const handleCheck = async () => {
+//     if (!validateInput()) return;
+
+//     try {
+//       setLoading(true);
+//       const data = await trainServices.getSchedule(trainNumber);
+//       setSchedule(data);
+//     } catch (error) {
+//       Alert.alert("Error", "Failed to fetch schedule. Please try again.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//        <Text style={styles.title}>Check Train Schedule</Text>
+//       <View style={styles.inputContainer}>
+//         <TextInput
+//           style={styles.input}
+//           placeholder="Enter Train Number"
+//           value={trainNumber}
+//           onChangeText={setTrainNumber}
+//           keyboardType="numeric"
+//           maxLength={5}
+//           placeholderTextColor="#B0B0B0"
+//         />
+//       </View>
+//       <View>
+//         <TouchableOpacity
+//           style={[styles.checkButton, loading && styles.disabledButton]}
+//           onPress={handleCheck}
+//           disabled={loading}
+//         >
+//           {loading ? (
+//             <ActivityIndicator color="#FFF" />
+//           ) : (
+//             <Text style={styles.buttonText}>Get Schedule</Text>
+//           )}
+//         </TouchableOpacity>
+//       </View>
+
+//       {schedule && (
+//         <ScrollView style={styles.scheduleContainer}>
+//           <View style={styles.trainInfo}>
+//             <Text style={styles.trainName}>{schedule.trainName}</Text>
+//             <Text style={styles.trainNumber}>#{schedule.trainNumber}</Text>
+//             <Text style={styles.runningDays}>
+//               Runs on: {schedule.runningDays.join(", ")}
+//             </Text>
+//           </View>
+
+//           {schedule.stations.map((station, index) => (
+//             <View key={station.code} style={styles.stationCard}>
+//               <View style={styles.stationDot} />
+//               {index !== schedule.stations.length - 1 && (
+//                 <View style={styles.stationLine} />
+//               )}
+//               <View style={styles.stationInfo}>
+//                 <Text style={styles.stationName}>{station.name}</Text>
+//                 <Text style={styles.stationCode}>{station.code}</Text>
+//                 <View style={styles.timeContainer}>
+//                   <Text style={styles.arrivalTime}>
+//                     Arr: {station.arrivalTime}
+//                   </Text>
+//                   <Text style={styles.departureTime}>
+//                     Dep: {station.departureTime}
+//                   </Text>
+//                   <Text style={styles.distance}>{station.distance} km</Text>
+//                 </View>
+//               </View>
+//             </View>
+//           ))}
+//         </ScrollView>
+//       )}
+//     </View>
+//   );
+// }
 export default function ScheduleScreen() {
   const [trainNumber, setTrainNumber] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,13 +115,45 @@ export default function ScheduleScreen() {
     return true;
   };
 
+  const formatScheduleData = (data) => {
+    const runningDays = [];
+    const dayMapping = {
+      sun: "Sunday",
+      mon: "Monday",
+      tue: "Tuesday",
+      wed: "Wednesday",
+      thu: "Thursday",
+      fri: "Friday",
+      sat: "Saturday",
+    };
+
+    for (const day in dayMapping) {
+      if (data.runDays[day]) runningDays.push(dayMapping[day]);
+    }
+
+    const stations = data.route.map((station) => ({
+      name: station.station_name || "N/A",
+      code: station.station_code || "N/A",
+      arrivalTime: station.sta_min ? `${Math.floor(station.sta_min / 60)}:${station.sta_min % 60}` : "N/A",
+      departureTime: station.std_min ? `${Math.floor(station.std_min / 60)}:${station.std_min % 60}` : "N/A",
+      distance: station.distance_from_source || "0",
+    }));
+
+    return {
+      trainName: data.trainName || "Unknown Train",
+      trainNumber: data.trainNumber || "Unknown Number",
+      runningDays,
+      stations,
+    };
+  };
+
   const handleCheck = async () => {
     if (!validateInput()) return;
 
     try {
       setLoading(true);
       const data = await trainServices.getSchedule(trainNumber);
-      setSchedule(data);
+      setSchedule(formatScheduleData(data));
     } catch (error) {
       Alert.alert("Error", "Failed to fetch schedule. Please try again.");
     } finally {
@@ -40,7 +163,7 @@ export default function ScheduleScreen() {
 
   return (
     <View style={styles.container}>
-       <Text style={styles.title}>Check Train Schedule</Text>
+      <Text style={styles.title}>Check Train Schedule</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -102,6 +225,7 @@ export default function ScheduleScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

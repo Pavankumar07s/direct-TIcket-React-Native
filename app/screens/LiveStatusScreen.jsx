@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { trainServices } from "../services/api";
+import trainServices from "../services/api";
 
 export default function LiveStatusScreen() {
   const [trainNumber, setTrainNumber] = useState("");
@@ -66,7 +66,7 @@ export default function LiveStatusScreen() {
         </TouchableOpacity>
       </View>
 
-      {status && (
+      {/* {status && (
         <View style={styles.statusContainer}>
           <View style={styles.statusHeader}>
             <Text style={styles.trainName}>{status.trainName}</Text>
@@ -99,7 +99,49 @@ export default function LiveStatusScreen() {
             <Text style={styles.eta}>ETA: {status.expectedArrival}</Text>
           </View>
         </View>
-      )}
+      )} */}
+      {status && (
+  <View style={styles.statusContainer}>
+    <View style={styles.statusHeader}>
+      <Text style={styles.trainName}>{status.trainName}</Text>
+      <Text style={styles.trainNumber}>#{status.trainNumber}</Text>
+      {/* Close Button */}
+      <TouchableOpacity 
+        style={styles.closeButton} 
+        onPress={() => setStatus(null)} 
+      >
+        <Text style={styles.closeButtonText}>✕</Text>
+      </TouchableOpacity>
+    </View>
+
+    <View style={styles.locationContainer}>
+      <Ionicons name="location" size={24} color="white" />
+      <Text style={styles.currentStation}>
+        Current Station: {status.currentStation}
+      </Text>
+    </View>
+
+    <View style={styles.delayContainer}>
+      <Text
+        style={[
+          styles.delay,
+          { color: status.delay > 0 ? "#F44336" : "#4CAF50" },
+        ]}
+      >
+        {status.delay > 0
+          ? `Delayed by ${status.delay} minutes`
+          : "Running on time"}
+      </Text>
+    </View>
+
+    <View style={styles.nextStationContainer}>
+      <Text style={styles.label}>Next Station:</Text>
+      <Text style={styles.value}>{status.nextStation}</Text>
+      <Text style={styles.eta}>ETA: {status.expectedArrival}</Text>
+    </View>
+  </View>
+)}
+
     </View>
   );
 }
@@ -163,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   statusContainer: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#333",
     borderRadius: 12,
     padding: 20,
     marginTop: 20,
@@ -181,20 +223,22 @@ const styles = StyleSheet.create({
   trainName: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: "white",
   },
   trainNumber: {
+    textAlign: "left",
     fontSize: 16,
-    color: "#888",
+    color: "white",
   },
   locationContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
+    
   },
   currentStation: {
     fontSize: 16,
-    color: "#555",
+    color: "white",
     marginLeft: 8,
   },
   delayContainer: {
@@ -209,7 +253,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#888",
+    color: "white",
   },
   value: {
     fontSize: 16,
@@ -219,6 +263,6 @@ const styles = StyleSheet.create({
   },
   eta: {
     fontSize: 14,
-    color: "#2196F3",
+    color: "white",
   },
 });
