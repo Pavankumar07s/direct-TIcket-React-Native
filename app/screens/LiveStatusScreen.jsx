@@ -34,12 +34,15 @@ export default function LiveStatusScreen() {
 
       console.log("trainNumber", data.data.train_number,"trainName", data.data.train_name, "currentStation", data.current_station_name, "delay", data.delay);
       setStatus({
-        trainName: data.data.train_name,
-        currentStatus: data.data.current_station_name,
-        // lastStation: data.lastStation,
-        trainNumber: data.data.train_number,
-        delay: data.data.delay,
+        trainName: data?.data?.train_name ?? "Data not present",
+        current_station: data?.data?.current_station_name?? "Data not present",
+        lastStation: data?.data?.upcoming_stations?.[data.data.upcoming_stations.length - 1]?.upcoming_stations ?? "Data not present",
+        trainNumber: data?.data?.train_number ?? "Data not present",
+        upcoming_stations: data?.data?.upcoming_stations?.[1]?.station_name ?? "Data not present",
+        delay: data?.data?.delay ?? "Data not present",
+        Eta: data?.data?.eta??"data not present",
     });
+    
     
     } catch (error) {
       Alert.alert("Error", "Failed to fetch live status. Please try again.");
@@ -127,7 +130,7 @@ export default function LiveStatusScreen() {
     <View style={styles.locationContainer}>
       <Ionicons name="location" size={24} color="white" />
       <Text style={styles.currentStation}>
-        Current Station: {status.current_station_name}
+        Current Station: {status.current_station}
       </Text>
     </View>
 
@@ -146,8 +149,8 @@ export default function LiveStatusScreen() {
 
     <View style={styles.nextStationContainer}>
       <Text style={styles.label}>Next Station:</Text>
-      <Text style={styles.value}>{status.nextStation}</Text>
-      <Text style={styles.eta}>ETA: {status.expectedArrival}</Text>
+      <Text style={styles.value}>{status.upcoming_stations}</Text>
+      <Text style={styles.eta}>ETA: {status.Eta}</Text>
     </View>
   </View>
 )}
@@ -268,7 +271,7 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "white",
     marginBottom: 6,
   },
   eta: {
