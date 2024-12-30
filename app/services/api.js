@@ -17,16 +17,19 @@ const trainServices = {
 
   getLiveStatus: async (trainNumber) => {
     try {
-      const response = await axios.get(`${BASE_URL}/liveStatus`, {
-        params: { trainNo: trainNumber },
-      });
-      console.log("response", response.data);
-      return response.data;
+        const response = await axios.get(`${BASE_URL}/liveStatus`, {
+            params: { trainNo: trainNumber },
+        });
+        const data = typeof response.data === "string" ? JSON.parse(response.data) : response.data;
+
+        // console.log("response", data);
+        return data;
     } catch (error) {
-      console.error("Live Status Error:", error.response || error.message);
-      throw error;
+        console.error("Live Status Error:", error.response || error.message);
+        throw error;
     }
-  },
+},
+
 
   getSchedule: async (trainNumber) => {
     try {
@@ -44,7 +47,9 @@ const trainServices = {
 
   getPNRStatus: async (pnrNumber) => {
     try {
-      const response = await axios.get(`${BASE_URL}/pnr-status`,{params: { pnr: pnrNumber },});
+      const response = await axios.get(`${BASE_URL}/pnr-status`, {
+        params: { pnr: pnrNumber },
+      });
       return response.data;
     } catch (error) {
       console.error("PNR Status Error:", error.response || error.message);

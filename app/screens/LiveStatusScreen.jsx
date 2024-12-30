@@ -30,7 +30,17 @@ export default function LiveStatusScreen() {
     try {
       setLoading(true);
       const data = await trainServices.getLiveStatus(trainNumber);
-      setStatus(data);
+      console.log("data", JSON.stringify(data, null, 2));
+
+      console.log("trainNumber", data.data.train_number,"trainName", data.data.train_name, "currentStation", data.current_station_name, "delay", data.delay);
+      setStatus({
+        trainName: data.data.train_name,
+        currentStatus: data.data.current_station_name,
+        // lastStation: data.lastStation,
+        trainNumber: data.data.train_number,
+        delay: data.data.delay,
+    });
+    
     } catch (error) {
       Alert.alert("Error", "Failed to fetch live status. Please try again.");
     } finally {
@@ -117,7 +127,7 @@ export default function LiveStatusScreen() {
     <View style={styles.locationContainer}>
       <Ionicons name="location" size={24} color="white" />
       <Text style={styles.currentStation}>
-        Current Station: {status.currentStation}
+        Current Station: {status.current_station_name}
       </Text>
     </View>
 
@@ -221,7 +231,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   trainName: {
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: "600",
     color: "white",
   },

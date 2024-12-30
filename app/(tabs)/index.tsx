@@ -67,7 +67,13 @@ export default function HomeScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [dateType, setDateType] = useState<null | 'departureDate' | 'returnDate'>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [recentSearches, setRecentSearches] = useState([]);
+  interface Search {
+    From: string;
+    To: string;
+    Date: string;
+  }
+  
+  const [recentSearches, setRecentSearches] = useState<Search[]>([]);
   const [searchResults, setSearchResults] = useState([]);
 
 
@@ -140,7 +146,7 @@ export default function HomeScreen() {
   
     console.log(newSearch);
   
-    setRecentSearches((prev) => [newSearch, ...prev.slice(0, 4)]);
+    setRecentSearches((prev) => [newSearch,...prev.slice(0, 4)]);
   
     try {
       // Make the POST request to the backend using Axios
@@ -335,8 +341,8 @@ export default function HomeScreen() {
                 key={index} 
                 style={styles.recentSearchItem}
                 onPress={() => {
-                  handleInputChange('from', search.from);
-                  handleInputChange('to', search.to);
+                  handleInputChange('from', search.From);
+                  handleInputChange('to', search.To);
                 }}
               >
                 <View style={styles.recentSearchIcon}>
@@ -344,9 +350,9 @@ export default function HomeScreen() {
                 </View>
                 <View style={styles.recentSearchInfo}>
                   <Text style={styles.recentSearchRoute}>
-                    {search.from} → {search.to}
+                    {search.From} → {search.To}
                   </Text>
-                  <Text style={styles.recentSearchDate}>{search.date}</Text>
+                  <Text style={styles.recentSearchDate}>{search.Date}</Text>
                 </View>
               </TouchableOpacity>
             ))
